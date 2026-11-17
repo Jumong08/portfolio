@@ -4,7 +4,7 @@ export const profile = {
   name: "John Mikhail Arazo",
   firstName: "John Mikhail",
   lastName: "Arazo",
-  initials: "John",
+  initials: "Arazo",
   title: "Senior Full Stack Web Developer",
   roles: [
     "Senior Full Stack Developer",
