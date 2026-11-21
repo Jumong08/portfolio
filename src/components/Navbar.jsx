@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { profile } from '../data.js'
+import ThemeToggle from './ThemeToggle.jsx'
 
-const links = ['about', 'skills', 'experience', 'education', 'contact']
+const links = ['about', 'experience', 'skills', 'education', 'contact']
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('')
-  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30)
+    const onScroll = () => setScrolled(window.scrollY > 10)
     onScroll()
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
       { rootMargin: '-45% 0px -50% 0px' }
@@ -22,45 +23,24 @@ export default function Navbar() {
   }, [])
 
   return (
-    <motion.header
-      className={`nav ${scrolled ? 'nav-scrolled' : ''}`}
-      initial={{ y: -80 }}
-      animate={{ y: 0 }}
-      transition={{ delay: 1.9, type: 'spring', stiffness: 120, damping: 18 }}
-    >
-      <a href="#home" className="nav-logo">
-        <span className="gradient-text">{profile.initials}</span><span className="dot">.</span>
-      </a>
-      <nav className="nav-links">
-        {links.map((l) => (
-          <a key={l} href={`#${l}`} className={active === l ? 'active' : ''}>
-            {active === l && <motion.span layoutId="pill" className="nav-pill" transition={{ type: 'spring', stiffness: 380, damping: 30 }} />}
-            <span className="nav-label">{l}</span>
-          </a>
-        ))}
-      </nav>
-      <button className={`burger ${open ? 'open' : ''}`} onClick={() => setOpen(!open)} aria-label="Menu">
-        <span /><span /><span />
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.nav
-            className="mobile-menu"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-          >
-            {links.map((l, i) => (
-              <motion.a
-                key={l} href={`#${l}`} onClick={() => setOpen(false)}
-                initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}
-              >
+    <header className={`nav ${scrolled ? 'nav-scrolled' : ''}`}>
+      <div className="container nav-inner">
+        <a href="#home" className="nav-logo">{profile.name}</a>
+        <div className="nav-actions">
+          <nav className={`nav-links ${open ? 'open' : ''}`}>
+            {links.map((l) => (
+              <a key={l} href={`#${l}`} className={active === l ? 'active' : ''} onClick={() => setOpen(false)}>
                 {l}
-              </motion.a>
+                {active === l && <motion.span layoutId="nav-underline" className="nav-underline" />}
+              </a>
             ))}
-          </motion.nav>
-        )}
-      </AnimatePresence>
-    </motion.header>
+          </nav>
+          <ThemeToggle />
+          <button className="nav-toggle" onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open}>
+            Menu
+          </button>
+        </div>
+      </div>
+    </header>
   )
 }
