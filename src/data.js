@@ -132,7 +132,7 @@ export const proficiency = [
 
 export const experience = [
   {
-    period: "2025 – Present",
+    period: "2025 – 2026",
     role: "Senior Web Developer / Software Engineer",
     company: "Stradcom Corporation",
     tags: [".NET 8", "React", "Azure", "YARP", "React Native"],
